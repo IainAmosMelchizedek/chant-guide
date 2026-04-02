@@ -50,6 +50,13 @@ async function loadChant(url) {
   const audioPlayer = document.getElementById('audio-player');
   const audioSection = document.getElementById('audio-section');
   const audioLabel = document.getElementById('audio-label');
+  const slider = document.getElementById('speed-slider');
+  const sliderValue = document.getElementById('speed-value');
+
+  if (chant.defaultBpm) {
+    slider.value = chant.defaultBpm;
+    sliderValue.textContent = chant.defaultBpm;
+  }
 
   if (chant.audioUrl) {
     audioPlayer.src = getAudioUrl(chant.audioUrl);
@@ -61,12 +68,14 @@ async function loadChant(url) {
   }
 
   currentSyllables = chant.syllables;
+  currentOffset = chant.audioOffset || 0;
 }
 
 let metronomeTimer = null;
 let currentSyllables = [];
-let onsetDetectorTimer = null;
+let currentOffset = 0;
 let metronomeStarted = false;
+let offsetTimer = null;
 
 function startMetronome(syllables) {
   if (metronomeTimer) clearInterval(metronomeTimer);
@@ -99,8 +108,8 @@ function stopAll() {
   if (metronomeTimer) clearInterval(metronomeTimer);
   metronomeTimer = null;
 
-  if (onsetDetectorTimer) clearInterval(onsetDetectorTimer);
-  onsetDetectorTimer = null;
+  if (offsetTimer) clearTimeout(offsetTimer);
+  offsetTimer = null;
 
   metronomeStarted = false;
 
@@ -116,19 +125,8 @@ function stopAll() {
   if (audioLabel) audioLabel.textContent = '♫ Audio will play when you press Start';
 
   if (audioPlayer) {
-    audioPlayer.removeEventListener('timeupdate', onTimeUpdate);
     audioPlayer.pause();
     audioPlayer.currentTime = 0;
-  }
-}
-
-function onTimeUpdate() {
-  const audioPlayer = document.getElementById('audio-player');
-  const audioLabel = document.getElementById('audio-label');
-  if (!metronomeStarted && audioPlayer.currentTime > 0) {
-    audioPlayer.removeEventListener('timeupdate', onTimeUpdate);
-    audioLabel.textContent = '♫ Playing';
-    startMetronome(currentSyllables);
   }
 }
 
@@ -142,15 +140,31 @@ function startAll() {
     return;
   }
 
-  metronomeStarted = false;
-  audioPlayer.addEventListener('timeupdate', onTimeUpdate);
   audioPlayer.play();
-  audioLabel.textContent = '♫ Listening for chant onset...';
   document.getElementById('btn-start').textContent = '⏸ Pause';
+
+  if (currentOffset > 0) {
+    audioLabel.textContent = `♫ Chant begins in ${currentOffset}s...`;
+    let remaining = currentOffset;
+    const countdown = setInterval(() => {
+      remaining--;
+      if (remaining > 0) {
+        audioLabel.textContent = `♫ Chant begins in ${remaining}s...`;
+      } else {
+        clearInterval(countdown);
+        audioLabel.textContent = '♫ Playing';
+        startMetronome(currentSyllables);
+      }
+    }, 1000);
+    offsetTimer = countdown;
+  } else {
+    audioLabel.textContent = '♫ Playing';
+    startMetronome(currentSyllables);
+  }
 }
 
 function toggleStartStop() {
-  if (metronomeTimer || onsetDetectorTimer) {
+  if (metronomeTimer || offsetTimer) {
     stopAll();
   } else {
     startAll();

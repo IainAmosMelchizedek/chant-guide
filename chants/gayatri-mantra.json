@@ -36,5 +36,7 @@
     { "text": "YAAT", "phonetic": "yaat", "emphasis": true, "duration": 2 }
   ],
   "rounds": 108,
+  "audioOffset": 8,
+  "defaultBpm": 75,
   "audioUrl": "audio/gayatri-mantra.mp3"
 }
