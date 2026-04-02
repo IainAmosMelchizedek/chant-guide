@@ -1,0 +1,32 @@
+{
+  "id": "mahabharata-invocation",
+  "title": "Mahabharata — Peace Invocation",
+  "tradition": "Mahabharata",
+  "source": "Mahabharata, Shanti Parva",
+  "sanskrit": "ॐ नमो भगवते वासुदेवाय\nसत्यं ज्ञानमनन्तं ब्रह्म",
+  "meaning": "Salutation to the Divine as Vasudeva — the all-pervading. That which is truth, knowledge, and infinite — that is Brahman.",
+  "syllables": [
+    { "text": "OM", "phonetic": "ohm", "emphasis": true, "duration": 2 },
+    { "text": "NA", "phonetic": "na", "emphasis": true, "duration": 1 },
+    { "text": "mo", "phonetic": "mo", "emphasis": false, "duration": 1 },
+    { "text": "bhag", "phonetic": "bhag", "emphasis": false, "duration": 1 },
+    { "text": "a", "phonetic": "a", "emphasis": false, "duration": 1 },
+    { "text": "VA", "phonetic": "va", "emphasis": true, "duration": 1 },
+    { "text": "te", "phonetic": "te", "emphasis": false, "duration": 1 },
+    { "text": "vaa", "phonetic": "vaa", "emphasis": false, "duration": 1 },
+    { "text": "su", "phonetic": "su", "emphasis": false, "duration": 1 },
+    { "text": "DE", "phonetic": "de", "emphasis": true, "duration": 1 },
+    { "text": "vaa", "phonetic": "vaa", "emphasis": false, "duration": 1 },
+    { "text": "ya", "phonetic": "ya", "emphasis": false, "duration": 1 },
+    { "text": "SAT", "phonetic": "sat", "emphasis": true, "duration": 1 },
+    { "text": "yam", "phonetic": "yam", "emphasis": false, "duration": 1 },
+    { "text": "JNYAA", "phonetic": "jnyaa", "emphasis": true, "duration": 2 },
+    { "text": "nam", "phonetic": "nam", "emphasis": false, "duration": 1 },
+    { "text": "a", "phonetic": "a", "emphasis": false, "duration": 1 },
+    { "text": "NAN", "phonetic": "nan", "emphasis": true, "duration": 1 },
+    { "text": "tam", "phonetic": "tam", "emphasis": false, "duration": 1 },
+    { "text": "BRAH", "phonetic": "brah", "emphasis": true, "duration": 2 },
+    { "text": "ma", "phonetic": "ma", "emphasis": false, "duration": 1 }
+  ],
+  "rounds": 108
+}

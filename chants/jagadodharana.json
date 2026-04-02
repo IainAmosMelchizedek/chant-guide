@@ -1,0 +1,31 @@
+{
+  "id": "jagadodharana",
+  "title": "Jagadodharana",
+  "tradition": "Kannada",
+  "source": "Purandaradasa — Haridasa tradition, 15th–16th century",
+  "sanskrit": "ಜಗದೋದ್ಧಾರನ ಆಡಿಸಿದಳೆ ಯಶೋದೆ\nಜಗದೋದ್ಧಾರನ",
+  "meaning": "Yashoda rocks the upholder of the universe — she cradles the one who sustains all of creation. A devotional composition by Purandaradasa, the father of Carnatic music, celebrating Krishna as a child held by his mother.",
+  "syllables": [
+    { "text": "JA", "phonetic": "ja", "emphasis": true, "duration": 1 },
+    { "text": "ga", "phonetic": "ga", "emphasis": false, "duration": 1 },
+    { "text": "DOD", "phonetic": "dod", "emphasis": true, "duration": 1 },
+    { "text": "dhaa", "phonetic": "dhaa", "emphasis": false, "duration": 2 },
+    { "text": "ra", "phonetic": "ra", "emphasis": false, "duration": 1 },
+    { "text": "na", "phonetic": "na", "emphasis": false, "duration": 1 },
+    { "text": "AA", "phonetic": "aa", "emphasis": true, "duration": 2 },
+    { "text": "di", "phonetic": "di", "emphasis": false, "duration": 1 },
+    { "text": "si", "phonetic": "si", "emphasis": false, "duration": 1 },
+    { "text": "DA", "phonetic": "da", "emphasis": true, "duration": 1 },
+    { "text": "le", "phonetic": "le", "emphasis": false, "duration": 1 },
+    { "text": "ya", "phonetic": "ya", "emphasis": false, "duration": 1 },
+    { "text": "SHO", "phonetic": "sho", "emphasis": true, "duration": 1 },
+    { "text": "de", "phonetic": "de", "emphasis": false, "duration": 1 },
+    { "text": "JA", "phonetic": "ja", "emphasis": true, "duration": 1 },
+    { "text": "ga", "phonetic": "ga", "emphasis": false, "duration": 1 },
+    { "text": "DOD", "phonetic": "dod", "emphasis": true, "duration": 1 },
+    { "text": "dhaa", "phonetic": "dhaa", "emphasis": false, "duration": 2 },
+    { "text": "ra", "phonetic": "ra", "emphasis": false, "duration": 1 },
+    { "text": "na", "phonetic": "na", "emphasis": false, "duration": 1 }
+  ],
+  "rounds": 3
+}
