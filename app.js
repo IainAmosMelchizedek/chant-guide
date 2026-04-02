@@ -40,6 +40,21 @@ async function loadChant(url) {
   document.getElementById('chant-sanskrit').textContent = chant.sanskrit.replace(/\\n/g, '\n');
   document.getElementById('chant-meaning').textContent = chant.meaning;
   document.getElementById('chant-rounds').textContent = 'Rounds: ' + chant.rounds;
+
+  const audioBtn = document.getElementById('btn-audio');
+  const audioPlayer = document.getElementById('audio-player');
+
+  if (chant.audioUrl) {
+    audioPlayer.src = chant.audioUrl;
+    audioBtn.style.display = 'inline-block';
+    audioBtn.textContent = '♫ Play Audio';
+    audioPlayer.pause();
+    audioPlayer.currentTime = 0;
+  } else {
+    audioBtn.style.display = 'none';
+    audioPlayer.src = '';
+  }
+
   startMetronome(chant.syllables);
 }
 
@@ -79,6 +94,19 @@ function stopMetronome() {
   document.getElementById('phonetic-display').textContent = '';
 }
 
+function toggleAudio() {
+  const audioPlayer = document.getElementById('audio-player');
+  const audioBtn = document.getElementById('btn-audio');
+  if (audioPlayer.paused) {
+    audioPlayer.play();
+    audioBtn.textContent = '■ Stop Audio';
+  } else {
+    audioPlayer.pause();
+    audioPlayer.currentTime = 0;
+    audioBtn.textContent = '♫ Play Audio';
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   loadChantList();
 
@@ -93,6 +121,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const chant = await fetchChant(url);
     startMetronome(chant.syllables);
   });
+
+  document.getElementById('btn-audio').addEventListener('click', toggleAudio);
 
   document.getElementById('speed-slider').addEventListener('input', e => {
     document.getElementById('speed-value').textContent = e.target.value;
