@@ -44,10 +44,12 @@ async function loadChant(url) {
 
   const audioPlayer = document.getElementById('audio-player');
   const audioSection = document.getElementById('audio-section');
+  const audioLabel = document.getElementById('audio-label');
 
   if (chant.audioUrl) {
     audioPlayer.src = chant.audioUrl;
     audioSection.style.display = 'block';
+    audioLabel.textContent = '♫ Audio will play when you press Start';
   } else {
     audioPlayer.src = '';
     audioSection.style.display = 'none';
@@ -101,19 +103,26 @@ function stopAll() {
     analyser = null;
   }
 
-  document.getElementById('syllable-display').textContent = '—';
-  document.getElementById('phonetic-display').textContent = '';
-  document.getElementById('audio-label').textContent = '♫ Audio will play when you press Start';
-
+  const display = document.getElementById('syllable-display');
+  const phonetic = document.getElementById('phonetic-display');
+  const btnStart = document.getElementById('btn-start');
   const audioPlayer = document.getElementById('audio-player');
-  audioPlayer.pause();
-  audioPlayer.currentTime = 0;
-  document.getElementById('btn-start').textContent = '▶ Start';
+  const audioLabel = document.getElementById('audio-label');
+
+  if (display) display.textContent = '—';
+  if (phonetic) phonetic.textContent = '';
+  if (btnStart) btnStart.textContent = '▶ Start';
+  if (audioLabel) audioLabel.textContent = '♫ Audio will play when you press Start';
+
+  if (audioPlayer) {
+    audioPlayer.pause();
+    audioPlayer.currentTime = 0;
+  }
 }
 
 function startAll() {
   const audioPlayer = document.getElementById('audio-player');
-  const label = document.getElementById('audio-label');
+  const audioLabel = document.getElementById('audio-label');
 
   if (!audioPlayer.src || audioPlayer.src === window.location.href) {
     startMetronome(currentSyllables);
@@ -131,7 +140,7 @@ function startAll() {
   analyser.connect(audioCtx.destination);
 
   audioPlayer.play();
-  label.textContent = '♫ Listening for chant onset...';
+  audioLabel.textContent = '♫ Listening for chant onset...';
   document.getElementById('btn-start').textContent = '⏸ Pause';
 
   const dataArray = new Uint8Array(analyser.frequencyBinCount);
@@ -146,7 +155,7 @@ function startAll() {
       detected = true;
       clearInterval(onsetDetectorTimer);
       onsetDetectorTimer = null;
-      label.textContent = '♫ Playing';
+      audioLabel.textContent = '♫ Playing';
       startMetronome(currentSyllables);
     }
   }, 50);
