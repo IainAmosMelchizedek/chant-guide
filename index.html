@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chant Guide</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+
+    <header>
+      <h1>Chant Guide</h1>
+      <p class="subtitle">Sacred texts from the Sanskrit tradition</p>
+    </header>
+
+    <section id="selector">
+      <label for="chant-select">Choose a chant:</label>
+      <select id="chant-select"></select>
+    </section>
+
+    <section id="chant-info">
+      <h2 id="chant-title">Loading...</h2>
+      <p id="chant-tradition"></p>
+      <p id="chant-sanskrit" class="sanskrit"></p>
+      <p id="chant-meaning" class="meaning"></p>
+      <p id="chant-rounds"></p>
+    </section>
+
+    <section id="metronome">
+      <div id="syllable-display">—</div>
+      <div id="phonetic-display"></div>
+      <div id="controls">
+        <button id="btn-start">▶ Start</button>
+        <button id="btn-stop">⏹ Stop</button>
+      </div>
+    </section>
+
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
