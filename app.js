@@ -22,8 +22,7 @@ function getAudioUrl(path) {
 
 async function fetchChant(url) {
   const res = await fetch(url);
-  const chant = await res.json();
-  return chant;
+  return await res.json();
 }
 
 function loadChantList() {
@@ -41,27 +40,28 @@ function loadChantList() {
 async function loadChant(url) {
   stopAll();
   const chant = await fetchChant(url);
+
   document.getElementById('chant-title').textContent = chant.title;
   document.getElementById('chant-tradition').textContent = chant.tradition + ' — ' + chant.source;
   document.getElementById('chant-sanskrit').textContent = chant.sanskrit.replace(/\\n/g, '\n');
   document.getElementById('chant-meaning').textContent = chant.meaning;
   document.getElementById('chant-rounds').textContent = 'Rounds: ' + chant.rounds;
 
-  const audioPlayer = document.getElementById('audio-player');
-  const audioSection = document.getElementById('audio-section');
-  const audioLabel = document.getElementById('audio-label');
   const slider = document.getElementById('speed-slider');
   const sliderValue = document.getElementById('speed-value');
-
   if (chant.defaultBpm) {
     slider.value = chant.defaultBpm;
     sliderValue.textContent = chant.defaultBpm;
   }
 
+  const audioPlayer = document.getElementById('audio-player');
+  const audioSection = document.getElementById('audio-section');
+  const audioLabel = document.getElementById('audio-label');
+
   if (chant.audioUrl) {
     audioPlayer.src = getAudioUrl(chant.audioUrl);
     audioSection.style.display = 'block';
-    audioLabel.textContent = '♫ Audio will play when you press Start';
+    audioLabel.textContent = '♫ Press Start when ready';
   } else {
     audioPlayer.src = '';
     audioSection.style.display = 'none';
@@ -69,18 +69,19 @@ async function loadChant(url) {
 
   currentSyllables = chant.syllables;
   currentOffset = chant.audioOffset || 0;
+
+  document.getElementById('syllable-display').textContent = '—';
+  document.getElementById('phonetic-display').textContent = '';
+  document.getElementById('btn-start').textContent = '▶ Start';
 }
 
 let metronomeTimer = null;
 let currentSyllables = [];
 let currentOffset = 0;
-let metronomeStarted = false;
 let offsetTimer = null;
 
-function startMetronome(syllables) {
+function startMetronome() {
   if (metronomeTimer) clearInterval(metronomeTimer);
-  currentSyllables = syllables;
-  metronomeStarted = true;
   let i = 0;
   const display = document.getElementById('syllable-display');
   const phonetic = document.getElementById('phonetic-display');
@@ -100,18 +101,12 @@ function startMetronome(syllables) {
   metronomeTimer = setInterval(showNext, ms);
 }
 
-function restartMetronome() {
-  startMetronome(currentSyllables);
-}
-
 function stopAll() {
   if (metronomeTimer) clearInterval(metronomeTimer);
   metronomeTimer = null;
 
-  if (offsetTimer) clearTimeout(offsetTimer);
+  if (offsetTimer) clearInterval(offsetTimer);
   offsetTimer = null;
-
-  metronomeStarted = false;
 
   const display = document.getElementById('syllable-display');
   const phonetic = document.getElementById('phonetic-display');
@@ -122,7 +117,7 @@ function stopAll() {
   if (display) display.textContent = '—';
   if (phonetic) phonetic.textContent = '';
   if (btnStart) btnStart.textContent = '▶ Start';
-  if (audioLabel) audioLabel.textContent = '♫ Audio will play when you press Start';
+  if (audioLabel) audioLabel.textContent = '♫ Press Start when ready';
 
   if (audioPlayer) {
     audioPlayer.pause();
@@ -134,32 +129,26 @@ function startAll() {
   const audioPlayer = document.getElementById('audio-player');
   const audioLabel = document.getElementById('audio-label');
 
-  if (!audioPlayer.src || audioPlayer.src === window.location.href) {
-    startMetronome(currentSyllables);
-    document.getElementById('btn-start').textContent = '⏸ Pause';
-    return;
-  }
-
   audioPlayer.play();
   document.getElementById('btn-start').textContent = '⏸ Pause';
 
   if (currentOffset > 0) {
-    audioLabel.textContent = `♫ Chant begins in ${currentOffset}s...`;
     let remaining = currentOffset;
-    const countdown = setInterval(() => {
+    audioLabel.textContent = `♫ Chant begins in ${remaining}s...`;
+    offsetTimer = setInterval(() => {
       remaining--;
       if (remaining > 0) {
         audioLabel.textContent = `♫ Chant begins in ${remaining}s...`;
       } else {
-        clearInterval(countdown);
+        clearInterval(offsetTimer);
+        offsetTimer = null;
         audioLabel.textContent = '♫ Playing';
-        startMetronome(currentSyllables);
+        startMetronome();
       }
     }, 1000);
-    offsetTimer = countdown;
   } else {
     audioLabel.textContent = '♫ Playing';
-    startMetronome(currentSyllables);
+    startMetronome();
   }
 }
 
@@ -183,6 +172,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('speed-slider').addEventListener('input', e => {
     document.getElementById('speed-value').textContent = e.target.value;
-    if (metronomeTimer) restartMetronome();
+    if (metronomeTimer) {
+      clearInterval(metronomeTimer);
+      metronomeTimer = null;
+      startMetronome();
+    }
   });
 });
