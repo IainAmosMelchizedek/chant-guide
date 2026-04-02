@@ -40,9 +40,11 @@ async function loadChant(url) {
 }
 
 let metronomeTimer = null;
+let currentSyllables = [];
 
 function startMetronome(syllables) {
   if (metronomeTimer) clearInterval(metronomeTimer);
+  currentSyllables = syllables;
   let i = 0;
   const display = document.getElementById('syllable-display');
   const phonetic = document.getElementById('phonetic-display');
@@ -62,8 +64,13 @@ function startMetronome(syllables) {
   metronomeTimer = setInterval(showNext, ms);
 }
 
+function restartMetronome() {
+  startMetronome(currentSyllables);
+}
+
 function stopMetronome() {
   if (metronomeTimer) clearInterval(metronomeTimer);
+  metronomeTimer = null;
   document.getElementById('syllable-display').textContent = '—';
   document.getElementById('phonetic-display').textContent = '';
 }
@@ -83,9 +90,8 @@ document.addEventListener('DOMContentLoaded', () => {
     startMetronome(chant.syllables);
   });
 
-document.getElementById('speed-slider').addEventListener('input', async e => {
+  document.getElementById('speed-slider').addEventListener('input', e => {
     document.getElementById('speed-value').textContent = e.target.value;
-    const url = document.getElementById('chant-select').value;
-    const chant = await fetchChant(url);
-    startMetronome(chant.syllables);
+    if (metronomeTimer) restartMetronome();
   });
+});
