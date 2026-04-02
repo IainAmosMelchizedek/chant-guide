@@ -30,6 +30,10 @@
     <section id="metronome">
       <div id="syllable-display">—</div>
       <div id="phonetic-display"></div>
+      <div id="audio-section" style="display:none;">
+        <audio id="audio-player" preload="none"></audio>
+        <p id="audio-label">♫ Audio will play when you press Start</p>
+      </div>
       <div id="speed-control">
         <label for="speed-slider">Pace: <span id="speed-value">40</span> syllables/min</label>
         <input type="range" id="speed-slider" min="10" max="120" value="40" />
@@ -37,9 +41,7 @@
       <div id="controls">
         <button id="btn-start">▶ Start</button>
         <button id="btn-stop">⏹ Stop</button>
-        <button id="btn-audio" style="display:none;">♫ Play Audio</button>
       </div>
-      <audio id="audio-player" preload="none"></audio>
     </section>
 
   </div>
