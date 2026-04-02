@@ -46,6 +46,8 @@ function startMetronome(syllables) {
   let i = 0;
   const display = document.getElementById('syllable-display');
   const phonetic = document.getElementById('phonetic-display');
+  const bpm = document.getElementById('speed-slider').value;
+  const ms = Math.round(60000 / bpm);
 
   function showNext() {
     if (i >= syllables.length) i = 0;
@@ -57,7 +59,7 @@ function startMetronome(syllables) {
   }
 
   showNext();
-  metronomeTimer = setInterval(showNext, 800);
+  metronomeTimer = setInterval(showNext, ms);
 }
 
 function stopMetronome() {
@@ -79,5 +81,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const url = document.getElementById('chant-select').value;
     const chant = await fetchChant(url);
     startMetronome(chant.syllables);
+  });
+
+  document.getElementById('speed-slider').addEventListener('input', e => {
+    document.getElementById('speed-value').textContent = e.target.value;
   });
 });

@@ -134,6 +134,23 @@ header h1 {
   font-style: italic;
 }
 
+#speed-control {
+  margin-bottom: 24px;
+}
+
+#speed-control label {
+  display: block;
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+#speed-slider {
+  width: 100%;
+  accent-color: #c9a84c;
+  cursor: pointer;
+}
+
 #controls {
   display: flex;
   gap: 16px;
