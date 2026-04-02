@@ -15,6 +15,11 @@ function getRawUrl(name) {
   return `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}/chants/${name}.json`;
 }
 
+function getAudioUrl(path) {
+  if (path.startsWith('http')) return path;
+  return `https://${GITHUB_USER}.github.io/${GITHUB_REPO}/${path}`;
+}
+
 async function fetchChant(url) {
   const res = await fetch(url);
   const chant = await res.json();
@@ -47,7 +52,7 @@ async function loadChant(url) {
   const audioLabel = document.getElementById('audio-label');
 
   if (chant.audioUrl) {
-    audioPlayer.src = chant.audioUrl;
+    audioPlayer.src = getAudioUrl(chant.audioUrl);
     audioSection.style.display = 'block';
     audioLabel.textContent = '♫ Audio will play when you press Start';
   } else {
@@ -60,13 +65,13 @@ async function loadChant(url) {
 
 let metronomeTimer = null;
 let currentSyllables = [];
-let audioCtx = null;
-let analyser = null;
 let onsetDetectorTimer = null;
+let metronomeStarted = false;
 
 function startMetronome(syllables) {
   if (metronomeTimer) clearInterval(metronomeTimer);
   currentSyllables = syllables;
+  metronomeStarted = true;
   let i = 0;
   const display = document.getElementById('syllable-display');
   const phonetic = document.getElementById('phonetic-display');
@@ -97,11 +102,7 @@ function stopAll() {
   if (onsetDetectorTimer) clearInterval(onsetDetectorTimer);
   onsetDetectorTimer = null;
 
-  if (audioCtx) {
-    audioCtx.close();
-    audioCtx = null;
-    analyser = null;
-  }
+  metronomeStarted = false;
 
   const display = document.getElementById('syllable-display');
   const phonetic = document.getElementById('phonetic-display');
@@ -115,8 +116,19 @@ function stopAll() {
   if (audioLabel) audioLabel.textContent = '♫ Audio will play when you press Start';
 
   if (audioPlayer) {
+    audioPlayer.removeEventListener('timeupdate', onTimeUpdate);
     audioPlayer.pause();
     audioPlayer.currentTime = 0;
+  }
+}
+
+function onTimeUpdate() {
+  const audioPlayer = document.getElementById('audio-player');
+  const audioLabel = document.getElementById('audio-label');
+  if (!metronomeStarted && audioPlayer.currentTime > 0) {
+    audioPlayer.removeEventListener('timeupdate', onTimeUpdate);
+    audioLabel.textContent = '♫ Playing';
+    startMetronome(currentSyllables);
   }
 }
 
@@ -130,35 +142,11 @@ function startAll() {
     return;
   }
 
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  analyser = audioCtx.createAnalyser();
-  analyser.fftSize = 256;
-  analyser.smoothingTimeConstant = 0.3;
-
-  const source = audioCtx.createMediaElementSource(audioPlayer);
-  source.connect(analyser);
-  analyser.connect(audioCtx.destination);
-
+  metronomeStarted = false;
+  audioPlayer.addEventListener('timeupdate', onTimeUpdate);
   audioPlayer.play();
   audioLabel.textContent = '♫ Listening for chant onset...';
   document.getElementById('btn-start').textContent = '⏸ Pause';
-
-  const dataArray = new Uint8Array(analyser.frequencyBinCount);
-  const SILENCE_THRESHOLD = 20;
-  let detected = false;
-
-  onsetDetectorTimer = setInterval(() => {
-    analyser.getByteFrequencyData(dataArray);
-    const avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
-
-    if (!detected && avg > SILENCE_THRESHOLD) {
-      detected = true;
-      clearInterval(onsetDetectorTimer);
-      onsetDetectorTimer = null;
-      audioLabel.textContent = '♫ Playing';
-      startMetronome(currentSyllables);
-    }
-  }, 50);
 }
 
 function toggleStartStop() {
