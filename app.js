@@ -83,7 +83,9 @@ document.addEventListener('DOMContentLoaded', () => {
     startMetronome(chant.syllables);
   });
 
-  document.getElementById('speed-slider').addEventListener('input', e => {
+document.getElementById('speed-slider').addEventListener('input', async e => {
     document.getElementById('speed-value').textContent = e.target.value;
+    const url = document.getElementById('chant-select').value;
+    const chant = await fetchChant(url);
+    startMetronome(chant.syllables);
   });
-});
