@@ -1,32 +1,36 @@
 const GITHUB_USER = 'IainAmosMelchizedek';
 const GITHUB_REPO = 'chant-guide';
-const CHANTS_PATH = 'chants';
-const API_BASE = 'https://api.github.com';
+const BRANCH = 'main';
 
-async function fetchChantList() {
-  const url = `${API_BASE}/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${CHANTS_PATH}`;
-  const res = await fetch(url);
-  const files = await res.json();
-  return files.filter(f => f.name.endsWith('.json'));
+const CHANT_FILES = [
+  'gayatri-mantra',
+  'valmiki-opening',
+  'mahabharata-invocation',
+  'kalidasa-kumarasambhava',
+  'taittiriya-shanti',
+  'jagadodharana'
+];
+
+function getRawUrl(name) {
+  return `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/${BRANCH}/chants/${name}.json`;
 }
 
-async function fetchChant(downloadUrl) {
-  const res = await fetch(downloadUrl);
+async function fetchChant(url) {
+  const res = await fetch(url);
   const chant = await res.json();
   return chant;
 }
 
-async function loadChantList() {
-  const files = await fetchChantList();
+function loadChantList() {
   const select = document.getElementById('chant-select');
   select.innerHTML = '';
-  files.forEach(file => {
+  CHANT_FILES.forEach(name => {
     const opt = document.createElement('option');
-    opt.value = file.download_url;
-    opt.textContent = file.name.replace('.json', '').replace(/-/g, ' ');
+    opt.value = getRawUrl(name);
+    opt.textContent = name.replace(/-/g, ' ');
     select.appendChild(opt);
   });
-  if (files.length > 0) loadChant(files[0].download_url);
+  loadChant(getRawUrl(CHANT_FILES[0]));
 }
 
 async function loadChant(url) {
@@ -52,8 +56,8 @@ function startMetronome(syllables) {
   const ms = Math.round(60000 / bpm);
 
   function showNext() {
-    if (i >= syllables.length) i = 0;
-    const syl = syllables[i];
+    if (i >= currentSyllables.length) i = 0;
+    const syl = currentSyllables[i];
     display.textContent = syl.text;
     display.className = syl.emphasis ? 'emphasis' : '';
     phonetic.textContent = syl.phonetic;
